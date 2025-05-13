@@ -1,20 +1,17 @@
 import { useState } from "react";
 import { Outlet } from "react-router";
 
-
-
-
 export default function CreateSaleRecord() {
   const [formData, setFormData] = useState({
     amount_charged: 0,
     amount_paid: 0,
     mobile_num: "",
-    services: [],
-    employees: [],
+    service: "",
+    employee: "",
   });
 
   return (
-    <div className="bg-white flex flex-col items-center justify-center h-screen">
+    <div className="bg-white text-black flex flex-col items-center justify-center h-screen">
       <Outlet context={{ formData, setFormData }} />
     </div>
   );

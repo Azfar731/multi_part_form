@@ -1,0 +1,82 @@
+[
+  {
+    "amount_charged": 45,
+    "amount_paid": 23,
+    "mobile_num": "03134549126",
+    "service": "srv001",
+    "employee": "emp001",
+    "id": 1
+  },
+  {
+    "amount_charged": 43,
+    "amount_paid": 23,
+    "mobile_num": "03134549126",
+    "service": "srv002",
+    "employee": "emp002",
+    "id": 2
+  },
+  {
+    "amount_charged": 13,
+    "amount_paid": 12,
+    "mobile_num": "03134549126",
+    "service": "srv007",
+    "employee": "emp003",
+    "id": 3
+  },
+  {
+    "amount_charged": 25,
+    "amount_paid": 15,
+    "mobile_num": "03134549126",
+    "service": "srv004",
+    "employee": "emp002",
+    "id": 4
+  },
+  {
+    "amount_charged": 35,
+    "amount_paid": 12,
+    "mobile_num": "03134549126",
+    "service": "srv002",
+    "employee": "emp004",
+    "id": 5
+  },
+  {
+    "amount_charged": 15,
+    "amount_paid": 12,
+    "mobile_num": "03134549126",
+    "service": "srv003",
+    "employee": "emp004",
+    "id": 6
+  },
+  {
+    "amount_charged": 14,
+    "amount_paid": 10,
+    "mobile_num": "03134549126",
+    "service": "srv006",
+    "employee": "emp004",
+    "id": 7
+  },
+  {
+    "amount_charged": 25,
+    "amount_paid": 25,
+    "mobile_num": "03134549126",
+    "service": "srv002",
+    "employee": "emp002",
+    "id": 8
+  },
+  {
+    "amount_charged": 54,
+    "amount_paid": 23,
+    "mobile_num": "03134549126",
+    "service": "srv002",
+    "employee": "emp002",
+    "id": 9
+  },
+  {
+    "amount_charged": 14,
+    "amount_paid": 12,
+    "mobile_num": "03134549126",
+    "service": "srv002",
+    "employee": "emp002",
+    "id": 10
+  }
+]

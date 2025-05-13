@@ -1,6 +1,21 @@
-import { Form, replace, type LoaderFunctionArgs } from "react-router";
-import { getClientbyMobileNumber, getServices } from "~/utils/functions";
+import {
+  Form,
+  redirect,
+  replace,
+  useActionData,
+  useNavigate,
+  useOutletContext,
+  useSubmit,
+  type LoaderFunctionArgs,
+} from "react-router";
+import {
+  createServiceRecord,
+  getAllEmployees,
+  getClientbyMobileNumber,
+  getAllServices,
+} from "~/utils/functions";
 import type { Route } from "./+types/form_part2";
+import type { FormType } from "~/utils/types";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const mobile_num = new URL(request.url).searchParams.get("mobile_num");
@@ -11,43 +26,100 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!client) {
     throw replace(`/create_record`);
   }
-  const services = getServices();
+  const services = getAllServices();
+  const employees = await getAllEmployees();
+  return { client, services, employees };
+}
 
-  return { client, services };
+export async function action({ request }: LoaderFunctionArgs) {
+  const formData = await request.json();
+  const { mobile_num, service, amount_charged, amount_paid, employee } =
+    formData;
+
+  //perform validation. Usually done through a libarary like zod or yup
+  debugger;
+  if (!service || !amount_charged || !amount_paid || !employee || !mobile_num) {
+    return { error: "All fields are required" };
+  }
+
+  if (amount_charged < amount_paid) {
+    return {
+      error: `Paid amount can't be greater than the charged amount`,
+    };
+  }
+
+  //include other validations as needed. important to redo all validations done in previous steps before creating a record in DB
+  debugger;
+  //create the record
+  const record = await createServiceRecord(formData);
+  if (record.success) {
+    throw replace(`/record/${record.id}`);
+  } else if (record.error_msg) {
+    return { error: record.error_msg };
+  } else {
+    return { error: "An unknown error occurred" };
+  }
 }
 
 export default function FormPart2({ loaderData }: Route.ComponentProps) {
-  const { client, services } = loaderData;
+  const { client, services, employees } = loaderData;
+  const { formData, setFormData } = useOutletContext<{
+    formData: FormType;
+    setFormData: React.Dispatch<React.SetStateAction<FormType>>;
+  }>();
+  const actionData = useActionData<{ error?: string }>();
+  const navigate = useNavigate();
+  const submit = useSubmit();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    submit(formData, { method: "post", encType: "application/json" });
+  };
 
   return (
     <Form
       method="post"
-      // onSubmit={handleSubmit}
+      onSubmit={handleSubmit}
       className="bg-white p-6 rounded shadow-md w-80 text-black"
     >
       <div className="block text-gray-700 text-sm font-bold mb-2">
-        Client Name:
+        Client Name:{" "}
         <span className="font-semibold">
           {`${client.first_name} ${client.last_name}`}
         </span>
       </div>
       <div className="block text-gray-700 text-sm font-bold mb-2">
-        Mobile Number:
+        Mobile Number:{" "}
         <span className="font-semibold">{client.mobile_number}</span>
       </div>
-      <label htmlFor="services">Select Servics</label>
+
+      <label
+        htmlFor="service"
+        className="block text-gray-700 text-sm font-bold mb-2"
+      >
+        Select Service
+      </label>
       <select
-        name="services"
-        id="services"
+        name="service"
+        id="service"
         required
         className="w-full px-3 py-2 border border-gray-300 rounded-md mb-4"
+        value={formData.service}
+        onChange={(e) =>
+          setFormData((prev) => ({
+            ...prev,
+            service: e.target.value,
+          }))
+        }
       >
+        <option value="">-- Select a Service --</option>
         {services.map((service) => (
           <option key={service.id} value={service.id}>
             {service.name}
           </option>
         ))}
       </select>
+
       <label
         htmlFor="amount_charged"
         className="block text-gray-700 text-sm font-bold mb-2"
@@ -61,7 +133,15 @@ export default function FormPart2({ loaderData }: Route.ComponentProps) {
         className="w-full px-3 py-2 border border-gray-300 rounded-md mb-4"
         min={0}
         required
+        value={formData.amount_charged}
+        onChange={(e) =>
+          setFormData((prev) => ({
+            ...prev,
+            amount_charged: Number(e.target.value),
+          }))
+        }
       />
+
       <label
         htmlFor="amount_paid"
         className="block text-gray-700 text-sm font-bold mb-2"
@@ -75,11 +155,48 @@ export default function FormPart2({ loaderData }: Route.ComponentProps) {
         className="w-full px-3 py-2 border border-gray-300 rounded-md mb-4"
         min={0}
         required
+        value={formData.amount_paid}
+        onChange={(e) =>
+          setFormData((prev) => ({
+            ...prev,
+            amount_paid: Number(e.target.value),
+          }))
+        }
       />
+      <label
+        htmlFor="employee"
+        className="block text-gray-700 text-sm font-bold mb-2"
+      >
+        Select Employee
+      </label>
+      <select
+        name="employee"
+        id="employee"
+        required
+        className="w-full px-3 py-2 border border-gray-300 rounded-md mb-4"
+        value={formData.employee}
+        onChange={(e) =>
+          setFormData((prev) => ({
+            ...prev,
+            employee: e.target.value,
+          }))
+        }
+      >
+        <option value="">-- Select an Employee --</option>
+        {employees.map((employee) => (
+          <option key={employee.id} value={employee.id}>
+            {employee.first_name} {employee.last_name}
+          </option>
+        ))}
+      </select>
+      {actionData?.error && (
+        <div className="text-red-700">{actionData.error}</div>
+      )}
+
       <div className="flex justify-between items-center mt-6">
         <button
           type="button"
-          //   onClick={GoToPrevPage}
+          onClick={() => navigate(`/create_record`)}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Previous
