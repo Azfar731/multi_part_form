@@ -1,9 +1,8 @@
 import {
   Form,
-  replace,
-  useActionData,
+  redirect, useActionData,
   useOutletContext,
-  type ActionFunctionArgs,
+  type ActionFunctionArgs
 } from "react-router";
 import type { FormType } from "~/utils/types";
 import { getClientbyMobileNumber } from "~/utils/functions";
@@ -18,15 +17,15 @@ export async function action({ request }: ActionFunctionArgs) {
   // Fetch the client
   const client = await getClientbyMobileNumber(mobile_num);
   if (!client) {
-    return { msg: `No client with mobile number: ${mobile_num} found` };
+    return { error: `No client with mobile number: ${mobile_num} found` };
   }
 
   const redirectUrl = `form_part2?mobile_num=${encodeURIComponent(mobile_num)}`;
-  throw replace(redirectUrl);
+  throw redirect(redirectUrl);
 }
 
 export default function Form_Part1() {
-  const actionData = useActionData<{ msg: string }>();
+  const actionData = useActionData<{ error: string }>();
   const { formData, setFormData } = useOutletContext<{
     formData: FormType;
     setFormData: React.Dispatch<React.SetStateAction<FormType>>;
@@ -61,7 +60,7 @@ export default function Form_Part1() {
           required
         />
         {actionData ? (
-          <div className="text-red-700">{actionData.msg}</div>
+          <div className="text-red-700">{actionData.error}</div>
         ) : undefined}
         <button
           type="submit"

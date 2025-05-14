@@ -33,23 +33,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: LoaderFunctionArgs) {
   const formData = await request.json();
-  const { mobile_num, service, amount_charged, amount_paid, employee } =
-    formData;
+  const { mobile_num, service, amount_charged, employee } = formData;
 
   //perform validation. Usually done through a libarary like zod or yup
-  debugger;
-  if (!service || !amount_charged || !amount_paid || !employee || !mobile_num) {
+
+  if (!service || !amount_charged || !employee || !mobile_num) {
     return { error: "All fields are required" };
   }
 
-  if (amount_charged < amount_paid) {
-    return {
-      error: `Paid amount can't be greater than the charged amount`,
-    };
-  }
-
   //include other validations as needed. important to redo all validations done in previous steps before creating a record in DB
-  debugger;
+
   //create the record
   const record = await createServiceRecord(formData);
   if (record.success) {
@@ -142,27 +135,6 @@ export default function FormPart2({ loaderData }: Route.ComponentProps) {
         }
       />
 
-      <label
-        htmlFor="amount_paid"
-        className="block text-gray-700 text-sm font-bold mb-2"
-      >
-        Amount Paid
-      </label>
-      <input
-        type="number"
-        name="amount_paid"
-        id="amount_paid"
-        className="w-full px-3 py-2 border border-gray-300 rounded-md mb-4"
-        min={0}
-        required
-        value={formData.amount_paid}
-        onChange={(e) =>
-          setFormData((prev) => ({
-            ...prev,
-            amount_paid: Number(e.target.value),
-          }))
-        }
-      />
       <label
         htmlFor="employee"
         className="block text-gray-700 text-sm font-bold mb-2"
