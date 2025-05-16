@@ -1,43 +1,48 @@
-import type { LoaderFunction, LoaderFunctionArgs } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
 import {
   getClientbyMobileNumber,
   getEmployee,
-  getService,
-  getServiceRecord,
+  getService
 } from "~/utils/functions";
 import type { Route } from "./+types/record";
-export async function loader({ params }: LoaderFunctionArgs) {
-  debugger
-  const { id: record_id } = params;
-  if (!record_id) {
-    throw new Error(`Required Parameter not found in URL`);
-  }
-  const service_record = getServiceRecord(record_id);
-  if (!service_record) {
-    throw new Error(`No record found with id: ${record_id}`);
-  }
-  const client = getClientbyMobileNumber(service_record.mobile_num);
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const { mobile_num, amount_charged, service_id, employee_id } =
+    getSearchParams(searchParams);
+
+  const client = getClientbyMobileNumber(mobile_num);
   if (!client) {
-    throw new Error(
-      `No client found with mobile number: ${service_record.mobile_num}`
-    );
+    throw new Error(`No client found with mobile number: ${mobile_num}`);
   }
 
-  const service = getService(service_record.service);
+  const service = getService(service_id);
   if (!service) {
-    throw new Error(`No service found with id: ${service_record.service}`);
+    throw new Error(`No service found with id: ${service}`);
   }
 
-  const employee = getEmployee(service_record.employee);
+  const employee = getEmployee(employee_id);
   if (!employee) {
-    throw new Error(`No employee found with id: ${service_record.employee}`);
+    throw new Error(`No employee found with id: ${employee}`);
   }
 
-  return { service_record, service, client, employee };
+  return { service, client, employee, amount_charged };
+}
+
+function getSearchParams(searchParams: URLSearchParams) {
+  const mobile_num = searchParams.get("mobile_num");
+  const service_id = searchParams.get("service");
+  const amount_charged = searchParams.get("amount_charged");
+  const employee_id = searchParams.get("employee");
+
+  if (!mobile_num || !service_id || !amount_charged || !employee_id) {
+    throw new Error("Search Params missing");
+  }
+  return { mobile_num, service_id, amount_charged, employee_id };
 }
 
 export default function Record({ loaderData }: Route.ComponentProps) {
-  const { service_record, service, client, employee } = loaderData;
+  const { amount_charged, service, client, employee } = loaderData;
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 relative">
@@ -58,10 +63,7 @@ export default function Record({ loaderData }: Route.ComponentProps) {
         </h3>
 
         <h3 className="font-medium text-gray-700">Amount Charged</h3>
-        <h3 className="text-gray-600">{service_record.amount_charged}</h3>
-
-        <h3 className="font-medium text-gray-700">Amount Paid</h3>
-        <h3 className="text-gray-600">{service_record.amount_paid}</h3>
+        <h3 className="text-gray-600">{amount_charged}</h3>
       </div>
     </div>
   );

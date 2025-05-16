@@ -47,8 +47,7 @@ export default function Form_Part1() {
           type="text"
           id="mobile_num"
           name="mobile_num"
-          pattern="^0[0-9]{10}$"
-          placeholder="03334290689"
+          pattern="[0-9]*"
           defaultValue={formData.mobile_num}
           onChange={(e) =>
             setFormData((prev) => ({
@@ -64,7 +63,7 @@ export default function Form_Part1() {
         ) : undefined}
         <button
           type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
+          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Next
         </button>

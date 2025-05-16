@@ -26,14 +26,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!client) {
     throw replace(`/create_record`);
   }
-  const services = getAllServices();
+  const services = await getAllServices();
   const employees = await getAllEmployees();
   return { client, services, employees };
 }
 
 export async function action({ request }: LoaderFunctionArgs) {
-  const formData = await request.json();
-  const { mobile_num, service, amount_charged, employee } = formData;
+  const data = await request.json();
+  const { mobile_num, service, amount_charged, employee } = data;
 
   //perform validation. Usually done through a libarary like zod or yup
 
@@ -44,14 +44,16 @@ export async function action({ request }: LoaderFunctionArgs) {
   //include other validations as needed. important to redo all validations done in previous steps before creating a record in DB
 
   //create the record
-  const record = await createServiceRecord(formData);
-  if (record.success) {
-    throw replace(`/record/${record.id}`);
-  } else if (record.error_msg) {
-    return { error: record.error_msg };
-  } else {
-    return { error: "An unknown error occurred" };
-  }
+
+  const params = new URLSearchParams({
+    mobile_num,
+    service,
+    amount_charged: amount_charged.toString(),
+    employee
+  });
+  const redirect_url = `/record?${params.toString()}`;
+  console.log("redirect_url: ", redirect_url);
+  throw replace(redirect_url)
 }
 
 export default function FormPart2({ loaderData }: Route.ComponentProps) {
@@ -60,7 +62,7 @@ export default function FormPart2({ loaderData }: Route.ComponentProps) {
     formData: FormType;
     setFormData: React.Dispatch<React.SetStateAction<FormType>>;
   }>();
-  const actionData = useActionData<{ error?: string }>();
+  const actionData = useActionData<{ error: string }>();
   const navigate = useNavigate();
   const submit = useSubmit();
 

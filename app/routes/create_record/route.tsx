@@ -4,7 +4,6 @@ import { Outlet } from "react-router";
 export default function CreateSaleRecord() {
   const [formData, setFormData] = useState({
     amount_charged: 0,
-    amount_paid: 0,
     mobile_num: "",
     service: "",
     employee: "",

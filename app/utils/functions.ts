@@ -39,6 +39,7 @@ const createServiceRecord = async (formData: FormType) => {
       ? Math.max(...currentRecords.map((record) => record.id)) + 1
       : 1;
 
+  // const newId = 17
   // Add new record with ID
   const recordWithId = { ...formData, id: newId };
   currentRecords.push(recordWithId);
@@ -46,7 +47,7 @@ const createServiceRecord = async (formData: FormType) => {
   // Write back to file
   fs.writeFileSync(filePath, JSON.stringify(currentRecords, null, 2));
 
-  return { id: recordWithId.id, success: true, error_msg: null };
+  return { id: 17, success: true, error_msg: null };
 };
 
 const getServiceRecord = (id: string | number) => {
