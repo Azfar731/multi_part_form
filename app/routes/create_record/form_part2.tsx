@@ -49,11 +49,11 @@ export async function action({ request }: LoaderFunctionArgs) {
     mobile_num,
     service,
     amount_charged: amount_charged.toString(),
-    employee
+    employee,
   });
   const redirect_url = `/record?${params.toString()}`;
-  console.log("redirect_url: ", redirect_url);
-  throw replace(redirect_url)
+
+  throw replace(redirect_url);
 }
 
 export default function FormPart2({ loaderData }: Route.ComponentProps) {

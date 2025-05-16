@@ -1,10 +1,11 @@
-import type { LoaderFunctionArgs } from "react-router";
+import { Link, type LoaderFunctionArgs } from "react-router";
 import {
   getClientbyMobileNumber,
   getEmployee,
-  getService
+  getService,
 } from "~/utils/functions";
 import type { Route } from "./+types/record";
+import { FaLongArrowAltLeft } from "react-icons/fa";
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
@@ -46,6 +47,13 @@ export default function Record({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 relative">
+      <Link
+        to="/"
+        className="bg-green-400 text-white font-semibold py-2 px-4 absolute top-20 left-10 rounded-lg hover:bg-green-500 flex items-center justify-around gap-2"
+      >
+        <FaLongArrowAltLeft className="" />
+        Go Back to Home
+      </Link>
       <div className="bg-white mt-14 p-8 rounded-lg shadow-md w-1/2 grid grid-cols-2 gap-4">
         <h1 className="text-2xl font-bold text-gray-800 mb-6 col-span-2 ">
           Record Details

@@ -1,6 +1,5 @@
 import {
-  Form,
-  redirect, useActionData,
+  Form, replace, useActionData,
   useOutletContext,
   type ActionFunctionArgs
 } from "react-router";
@@ -21,7 +20,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const redirectUrl = `form_part2?mobile_num=${encodeURIComponent(mobile_num)}`;
-  throw redirect(redirectUrl);
+  throw replace(redirectUrl);
 }
 
 export default function Form_Part1() {
