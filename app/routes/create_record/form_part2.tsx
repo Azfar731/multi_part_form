@@ -1,18 +1,15 @@
 import {
-  Form,
-  redirect,
-  replace,
+  Form, replace,
   useActionData,
   useNavigate,
   useOutletContext,
   useSubmit,
-  type LoaderFunctionArgs,
+  type LoaderFunctionArgs
 } from "react-router";
 import {
-  createServiceRecord,
   getAllEmployees,
   getClientbyMobileNumber,
-  getAllServices,
+  getAllServices
 } from "~/utils/functions";
 import type { Route } from "./+types/form_part2";
 import type { FormType } from "~/utils/types";

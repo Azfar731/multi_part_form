@@ -2,15 +2,14 @@
 
 This repository contains the source code for the tutorial article "Creating a Multi-Part Form Easily with React-Router (No Third-Party Libraries)". It demonstrates how to implement a multi-step form using only React Router's built-in capabilities, without relying on any additional form management libraries.
 
-## Project Overview
+## Features
 
-This project showcases how to:
-
-- Create a multi-step form using React Router's native features
+- Multi-step form implementation in React Router
 - Manage form state between different steps
 - Handle form navigation and validation
-- Implement a clean and maintainable form structure
 - Process and submit form data
+- Includes mock data(for replicating db behaviour)
+- No third-party form libraries required
 
 ## Tech Stack
 
@@ -44,14 +43,14 @@ npm run dev
 ```
 app/
 ├── routes/
-│   ├── create_record/      # Multi-part form components
-│   │   ├── form_part1.tsx  # First step of the form
-│   │   ├── form_part2.tsx  # Second step of the form
-│   │   └── route.tsx       # Main form route handler
-│   ├── home.tsx
-│   └── record.tsx
-├── data/                   # Sample data files
-└── utils/                  # Utility functions and types
+│   ├── home.tsx                 # Home page
+│   ├── record.tsx              # Record view
+│   └── create_record/          # Multi-part form implementation
+│       ├── form_part1.tsx      # First step of the form
+│       ├── form_part2.tsx      # Second step of the form
+│       └── route.tsx           # Form route configuration
+├── data/                       # Mock data files
+├── utils/                      # Utility functions and types
 ```
 
 ## Tutorial Article
@@ -60,7 +59,7 @@ For a detailed explanation of how this implementation works, check out the full 
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Contributing
 
